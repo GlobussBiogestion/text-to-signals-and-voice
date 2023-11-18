@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>Convertir a Lenguaje de Señas y a voz</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #007BFF;
+      color: #FFF;
+      text-align: center;
+      padding: 20px;
+      margin: 0;
+    }
+    h1 {
+      font-size: 3.5vh; /* Utilizar unidades relativas para el tamaño de fuente en dispositivos móviles */
+    }
+    #inputText, #outputSign {
+      width: 80%;
+      margin: 0 auto;
+      max-width: 600px;
+    }
+    #inputText {
+      padding: 2vh; /* Utilizar unidades relativas para el espaciado en dispositivos móviles */
+      font-size: 3vh; /* Utilizar unidades relativas para el tamaño de fuente en dispositivos móviles */
+    }
+    #outputSign {
+      font-family: 'Gallaudet Regular';
+      font-weight: normal;
+      background-color: #fff;
+      color: #000;
+
+      font-size: 10vh; /* Utilizar unidades relativas para el tamaño de fuente en dispositivos móviles */
+      padding: 2vh; /* Utilizar unidades relativas para el espaciado en dispositivos móviles */
+      border-radius: 10px;
+      margin-top: 2vh; /* Utilizar unidades relativas para el margen en dispositivos móviles */
+      word-wrap: break-word;
+      overflow-y: auto;
+      max-height: 40vh; /* Utilizar unidades relativas para el tamaño en dispositivos móviles */
+      width: 90vw; /* Utilizar unidades relativas para el ancho en dispositivos móviles */
+    }
+    #footer {
+      font-size: 2vh; /* Utilizar unidades relativas para el tamaño de fuente en dispositivos móviles */
+      margin-top: 2vh; /* Utilizar unidades relativas para el margen en dispositivos móviles */
+    }
+    #footer a {
+      color: #FFF;
+    }
+    #limpiarButton {
+      background-color: #ff0000;
+      color: #FFF;
+      border: none;
+      padding: 2vh 4vw; /* Utilizar unidades relativas para el espaciado en dispositivos móviles */
+      margin-top: 2vh; /* Utilizar unidades relativas para el margen en dispositivos móviles */
+      cursor: pointer;
+font-size: 2.5vh;
+    }
+.boton-estilo {
+  background-color: #ff0000;
+  color: #FFF;
+  border: none;
+  padding: 2vh 4vw;
+  margin-top: 2vh;
+  cursor: pointer;
+  font-size: 2.5vh;
+}
+
+  </style>
+</head>
+<body>
+  <h1>Convertir Texto a Lenguaje de Señas y a Voz</h1>
+  <textarea id="inputText" placeholder="Pega o escribe el texto aquí"></textarea><br>
+  <button id="boton" class="boton-estilo">Leer en Voz Alta</button>
+<button id="pararBoton" class="boton-estilo" onclick="pararLectura()">Parar de Leer</button>
+<div id="outputSign"></div>
+<button id="limpiarButton" class="boton-estilo" onclick="limpiarTexto()">Limpiar</button>
+
+
+  <div id="footer">
+     &copy; Powered by <a href="https://biogestion.com.co/" target="_blank" rel="noopener">Globuss Biogestión</a><br>
+     <a href="politica-de-privacidad.html" target="_blank">Política de Privacidad</a>
+  </div>
+
+  <script>
+    function eliminarTildes(texto) {
+      return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function convertirALenguajeDeSenas() {
+      const inputText = document.getElementById("inputText").value;
+      const outputSign = document.getElementById("outputSign");
+      const textoSinTildes = eliminarTildes(inputText);
+
+      outputSign.textContent = textoSinTildes;
+    }
+
+    function limpiarTexto() {
+      document.getElementById("inputText").value = "";
+      document.getElementById("outputSign").textContent = "";
+    }
+
+    document.getElementById("inputText").addEventListener("input", convertirALenguajeDeSenas);
+  </script>
+
+<script>
+    // Verifica si el navegador soporta la Web Speech API
+    if ('speechSynthesis' in window) {
+      var synthesis = window.speechSynthesis;
+      var boton = document.getElementById('boton');
+      var inputText = document.getElementById('inputText'); // Cambio de 'texto' a 'inputText'
+
+      boton.addEventListener('click', function() {
+        // Crea un objeto SpeechSynthesisUtterance
+        var mensaje = new SpeechSynthesisUtterance(inputText.value); // Cambio de 'texto' a 'inputText'
+        
+        // Reproduce el mensaje en voz alta
+        synthesis.speak(mensaje);
+      });
+    } else {
+      // El navegador no es compatible con la Web Speech API
+      alert("Tu navegador no admite la síntesis de voz.");
+    }
+  </script>
+<script>
+    var synthesis = window.speechSynthesis; // Mueve la variable 'synthesis' fuera del evento del botón para que esté disponible globalmente
+
+    function pararLectura() {
+      if (synthesis.speaking) {
+        synthesis.cancel();
+      }
+    }
+
+    // Resto del código
+</script>
+
+</body>
+</html>
